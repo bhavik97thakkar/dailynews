@@ -37,17 +37,18 @@ export class News extends Component {
     }
 
     async updateNews() {
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=25b4367aa8014b4888e0a809157e8a8f&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        this.props.setProgress(5);
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true });
         let data = await fetch(url); // using fetch api through async await async await returns promise
         let parsedData = await data.json();
-        console.log(parsedData); //itself a promise of data
+        //console.log(parsedData); //itself a promise of data
         this.setState({
             articles: parsedData.articles,
             totalResults: parsedData.totalResults,
             loading: false
         }) //old articles to new articles ie static way from appending all the json data to array to fetching data from url through fetch api
-
+        this.props.setProgress(100);
     }
 
     async componentDidMount() { //componentDidMount is a lifecycle method
@@ -93,7 +94,7 @@ export class News extends Component {
 
     fetchMoreData = async()=>{
         this.setState({page: this.state.page + 1})
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=25b4367aa8014b4888e0a809157e8a8f&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`
         // this.setState({ loading: true });
         let data = await fetch(url); // using fetch api through async await async await returns promise
         let parsedData = await data.json();
@@ -118,7 +119,7 @@ export class News extends Component {
                     hasMore={this.state.articles.length !== this.state.totalResults}
                     loader={<Spinner />}
                 >
-            <div className='container my-4'>
+            <div className='container my-2'>
                     <div className="row">
                         {this.state.articles.map((element) => { //we can loop articles through this.state.article
                             return <div className="col-md-4 my-2" key={element.url}>
